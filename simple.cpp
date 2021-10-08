@@ -1,5 +1,8 @@
 int main() {
     // debug
+
+    int cnt = 0;
+
     int ls = robot.get_ls();
     int rs = robot.get_rs();
 
@@ -11,8 +14,22 @@ int main() {
     ROS_INFO("Right Sonar %i cm", rs);
 
     // ゴール
-    if (ls != 0 && ls < 3 && rs != 0 && rs < 3) {
-        robot.end();
+    if (ls < 5 && rs < 5) {
+        if (ls < rs) {
+            // 右に回転
+            robot.move(0.0, -1.5);
+            robot.move(0.05, 0.0);
+            robot.wait(0.5);
+        } else {
+            // 左に回転
+            robot.move(0.0, 1.5);
+            robot.move(0.05, 0.0);
+            robot.wait(0.5);
+        }
+        cnt += 1;
+        if (cnt == 2) {
+            robot.end();
+        }
     } else if (ls != 0 && ls < 10) {
         robot.stop();
         robot.move(0.0, -1.0);

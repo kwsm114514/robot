@@ -12,7 +12,9 @@ int main() {
     ROS_INFO("Right Sonar %i cm", rs);
 
     // ゴール
-    if (ls < 10 && rs < 10) {
+    if (ls < 7 && rs < 7) {
+        robot.end();
+    } else if (ls < 7 || rs < 7) {
         robot.stop();
         robot.move(-0.1, 0.0);
         robot.wait(0.5);
@@ -35,3 +37,5 @@ int main() {
     int robot_y_end = robot.get_y();
     printf("start x: %d, y: %d", robot_x_end, robot_y_end);
 }
+
+// cd catkin_wsb catkin_make

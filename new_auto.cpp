@@ -27,6 +27,10 @@ int main(int argc, char** argv)
     int robot_x_start = robot.get_x();
     int robot_y_start = robot.get_y();
 
+    if (robot_y_start > 1.0) {
+        robot.stop();
+    }
+
     ROS_INFO("Left Sonar %i cm", ls);
     ROS_INFO("Right Sonar %i cm", rs);
 
@@ -67,7 +71,7 @@ int main(int argc, char** argv)
                     omega = -0.2;
                 }
                 else if (height > 300 && width > 400) {
-                    robot.sleep();
+                    robot.stop();
                 }
                 else{
                     v = 0.04;
@@ -78,7 +82,7 @@ int main(int argc, char** argv)
             if (bbox.label == "trafic light" && height > 100) {
                 // 色の判定をする。
                 bool is_red = false;
-                int red_y = height / 3 + bbox.ul.y;
+                int red_y = height / 4 + bbox.ul.y;
                 // xはcenter_xでよくね？
                 // int green = height * 2 / 3 + bbox.ul.y;
                 int haba = height / 6;
@@ -86,6 +90,7 @@ int main(int argc, char** argv)
                 for (int y = red_y - haba; y < red_y + haba; y++) {
                     for (int x = center_x - haba; x < center_x + haba; x++) {
                         if (img.at<cv::Vec3b>(y, x)[2] > 126) {
+                            printf("Red: %d", img.at<cv::Vec3b>(y, x)[2]);
                             is_red = true;
                             break;
                         }
@@ -104,17 +109,19 @@ int main(int argc, char** argv)
             }
             // 猫のとき
             if (bbox.label == "cat") {
-                if (ls != 0 && ls < 10) {
-                    robot.stop();
-                    robot.move(0.0, -1.0);
-                    robot.wait(0.5);
-                } else if (rs != 0 && rs < 10) {
-                    robot.stop();
-                    robot.move(0.0, 1.0);
-                    robot.wait(0.5);
-                } else {
-                    robot.move(0.2, 0.0);
-                    robot.wait(0.5);
+                robot.move(-1.0, 0.0);
+                robot.wait(0.3);
+                if (center_x < (640 / 2) - 50) {
+                    v = 0.01;
+                    omega = -0.2;
+                    robot.move(0.0, -0.1);
+                    robot.wait(0.3);
+                }
+                else if (center_x > (640 / 2) + 50) {
+                    v = 0.02;
+                    omega = 0.2;
+                    robot.move(0.0, 0.1);
+                    robot.wait(0.3);
                 }
             }
             if (bbox.label == "person") {
@@ -124,6 +131,7 @@ int main(int argc, char** argv)
 
         // Send command to robot
         robot.move(v, omega);
+        robot.wait(0.1);
 
         /// Display robot command
         camera.add_command(v, omega);
@@ -131,19 +139,20 @@ int main(int argc, char** argv)
         camera.add_detection();
         /// Show image
         camera.show_img();
-    }
+    } 
     if (ls != 0 && ls < 10) {
         robot.stop();
         robot.move(0.0, -1.0);
-        robot.wait(0.5);
+        robot.wait(0.3);
     } else if (rs != 0 && rs < 10) {
         robot.stop();
         robot.move(0.0, 1.0);
-        robot.wait(0.5);
+        robot.wait(0.3);
     } else {
-        robot.move(0.2, 0.0);
+        robot.move(0.1, 0.0);
         robot.wait(0.5);
     }
+
 
     ////////////////////////////////////////////////////////
     ros::spinOnce();

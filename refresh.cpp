@@ -163,8 +163,8 @@ int main(int argc, char** argv)
         robot.move(0.0, 1.0);
         robot.wait(0.3);
     } else {
-        robot.move(0.1, 0.0);
-        robot.wait(0.5);
+        robot.move(0.2, 0.0);
+        robot.wait(0.3);
     }
 
 

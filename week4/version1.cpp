@@ -1,3 +1,4 @@
+
 #include <ros/ros.h>
 
 #include <functional>
@@ -120,10 +121,19 @@ int main(int argc, char** argv) {
                         robot.move(0.0, -0.3);
                         robot.wait(0.3);
                         nearly(robot, "right", 3);
+                        // 左を向く
+                        robot.move(0.0, 0.2);
+                        robot.wait(0.3);
                     } else if (center_x > (640 / 2) + 50) {
                         robot.move(0.0, 0.3);
                         robot.wait(0.3);
                         nearly(robot, "left", 3);
+                        // 右を向く
+                        robot.move(0.0, -0.2);
+                        robot.wait(0.3);
+                    } else {
+                        robot.move(0.2, 0.0);
+                        robot.wait(0.3);
                     }
                 }
                 if (bbox.label == "person") {

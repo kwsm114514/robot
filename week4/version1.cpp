@@ -35,7 +35,7 @@ int main(int argc, char** argv) {
         ROS_INFO("Right Sonar %i cm", rs);
 
         printf("y: %lf, x: %lf", robot.get_y(), robot.get_x());
-        printf("tine; %lf", robot.get_time());
+        printf("tie; %lf", robot.get_time());
 
         // 目的地までの時間を短縮できるので制限時間をつけても問題ないはず。
         if (robot.get_time() > 100) {

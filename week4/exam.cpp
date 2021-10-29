@@ -1,4 +1,3 @@
-
 #include <ros/ros.h>
 
 #include <functional>
@@ -111,7 +110,7 @@ int main(int argc, char** argv) {
                             robot.move(0.02, 0.2);
                             robot.wait(0.1);
                         } else if (center_x > (640 / 2) + 50) {
-                            robot.move(0.02, 0.2);
+                            robot.move(0.02, -0.2);
                             robot.wait(0.1);
                         }
                     }
